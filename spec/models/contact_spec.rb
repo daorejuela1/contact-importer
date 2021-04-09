@@ -220,13 +220,13 @@ RSpec.describe Contact, type: :model do
     end
 
     it 'duplicated data but different email' do
-      contact2 = FactoryBot.create(:user, email: "1475@holbertonschool.com")
-      expect(contact2).to be_valid
+      contact2 = FactoryBot.create(:contact, email: "1475@holbertonschool.com")
+      expect(contact).to be_valid
     end
 
     it 'duplicated data same email' do
-      contact2 = FactoryBot.create(:user, email: "1475@holbertonschool.com")
-      expect(contact2).not_to be_valid
+      contact2 = FactoryBot.create(:contact, email: "1475@holbertonschool.com")
+      expect(contact).not_to be_valid
     end
 
   end
