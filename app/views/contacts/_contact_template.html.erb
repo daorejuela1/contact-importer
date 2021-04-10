@@ -1,0 +1,11 @@
+<tr>
+  <th scope="row"><%= index %></th>
+  <td><%= contact.name %></td>
+  <td><%= date_parser(contact.birthday) %></td>
+  <td><%= contact.phone_number %></td>
+  <td><%= contact.address %></td>
+  <td><%= show_credit_card(contact.card_number) %></td>
+  <td><%= contact.card_issuer %></td>
+  <td><%= contact.email %></td>
+  <td><%= contact.user.email %></td>
+</tr>
