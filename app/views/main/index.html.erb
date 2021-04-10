@@ -1,3 +1,5 @@
 <h1 class= "display-5 text-center" >All Our Contacts</h1>
 
-<p>Find me in app/views/main/index.html.erb</p>
+<%= pagy_bootstrap_nav(@pagy).html_safe %>
+<%= render 'contacts/contact_table', {contacts: @contacts}%>
+<%= pagy_bootstrap_nav(@pagy).html_safe %>

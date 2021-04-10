@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'contacts/index'
   root 'main#index'
   get 'main/index'
   devise_for :users
