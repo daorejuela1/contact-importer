@@ -1,3 +1,5 @@
+<%= link_to('Import contacts using CSV', new_csv_upload_path, class: "m-3 d-block col-6 mx-auto btn btn-primary") if user_signed_in? %>
+
 <h1 class= "display-5 text-center" >All Our Contacts</h1>
 
 <%= pagy_bootstrap_nav(@pagy).html_safe %>
