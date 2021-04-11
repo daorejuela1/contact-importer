@@ -1,0 +1,11 @@
+<%= form_with model: csv_upload, url: upload_csv_uploads_path  do |form| %>
+  <% if csv_upload.errors.any? %>
+    <div class="alert alert-danger">
+      <% csv_upload.errors.full_messages.each do |message| %>
+        <div><%= message %> </div>
+      <% end %>
+    </div>
+  <% end %>
+  <%= form.file_field :csv_file, class: "form-control" %>
+  <%= form.submit "Upload", class: "btn btn-outline-primary" %>
+<% end %>
