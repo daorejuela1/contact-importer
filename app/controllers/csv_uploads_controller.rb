@@ -5,8 +5,8 @@ class CsvUploadsController < ApplicationController
   
   def upload
     @csv_upload = current_user.csv_uploads.new(csv_params)
-    if @csv_upload.valid?
-      render "csv_mapper/new"
+    if @csv_upload.save
+      render csv_mapper_new_path, notice: "File accepted"
     else
       render :new
     end
