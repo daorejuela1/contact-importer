@@ -1,4 +1,5 @@
 class Contact < ApplicationRecord
+  self.implicit_order_column = "created_at"
 
   belongs_to :user
 
@@ -31,7 +32,10 @@ class Contact < ApplicationRecord
         if contact.save
           p "Saved!!"
         else
-          p contact.errors.full_messages
+          # Generate error with associated user
+          contact_dict.delete("card_number")
+          contact_dict[:reason] = contact.errors.full_messages
+          current_user.contact_errors.find_or_create_by!(contact_dict)
         end
       end
     end

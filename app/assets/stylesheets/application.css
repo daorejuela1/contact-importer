@@ -13,3 +13,21 @@
  *= require_tree .
  *= require_self
  */
+a.nav_logo:hover { 
+	background-color: white; 
+	text-decoration: none; 
+}
+
+body {
+	padding-bottom: 70px;
+}
+
+.navbar {
+	height: 80px;
+}
+
+img.img_upload_field {
+	width: 100px;
+	height: 100px;
+	display: none;
+}

@@ -7,6 +7,7 @@ class User < ApplicationRecord
 
   has_many :csv_uploads
   has_many :contacts
+  has_many :contact_errors
   validates :email, format: { with: VALID_EMAIL_REGEX, message: 'Invalid E-mail' },
     uniqueness: { case_sensitive: false  }
 end

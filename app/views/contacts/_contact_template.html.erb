@@ -1,11 +1,11 @@
 <tr>
   <th scope="row"><%= index %></th>
-  <td><%= contact.name %></td>
-  <td><%= date_parser(contact.birthday) %></td>
-  <td><%= contact.phone_number %></td>
-  <td><%= contact.address %></td>
-  <td><%= show_credit_card(contact.card_number) %></td>
-  <td><%= contact.card_issuer %></td>
-  <td><%= contact.email %></td>
-  <td><%= contact.user.email %></td>
+  <td class="text-center"><%= contact.name %></td>
+  <td class="text-center"><%= error_fields.nil? ? date_parser(contact.birthday) : contact.birthday %></td>
+  <td class="text-center"><%= contact.phone_number %></td>
+  <td class="text-center"><%= contact.address %></td>
+  <td class="text-center"><%= error_fields.nil? ? show_credit_card(contact.card_number) : "Not saved" %></td>
+  <td class="text-center"><%= contact.card_issuer if error_fields.nil? %></td>
+  <td class="text-center"><%= contact.email %></td>
+  <td><% error_listing(contact.reason) if error_fields.present? %></td>
 </tr>

@@ -2,11 +2,15 @@ class CsvUploadsController < ApplicationController
   def new
     @csv_upload = CsvUpload.new()
   end
+
+  def index
+    @pagy, @csv_files = pagy(current_user.csv_uploads.all)
+  end
   
   def upload
     @csv_upload = current_user.csv_uploads.new(csv_params)
     if @csv_upload.save
-      render csv_mapper_new_path, notice: "File accepted"
+      render new_csv_mapper_path, notice: "File accepted"
     else
       render :new
     end

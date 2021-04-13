@@ -3,7 +3,8 @@ class ContactsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @pagy, @contacts = pagy(Contact.all)
+    @pagy, @contacts = pagy(current_user.contacts.all)
+    @pagy_errors, @contact_errors = pagy(current_user.contact_errors.all, page_param: :page_error)
   end
 
   def new
