@@ -5,9 +5,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :validatable
 
-  has_many :csv_uploads
-  has_many :contacts
-  has_many :contact_errors
+  has_many :csv_uploads, dependent: :destroy
+  has_many :contacts, dependent: :destroy
+  has_many :contact_errors, dependent: :destroy
   validates :email, format: { with: VALID_EMAIL_REGEX, message: 'Invalid E-mail' },
     uniqueness: { case_sensitive: false  }
 end

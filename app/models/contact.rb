@@ -14,7 +14,7 @@ class Contact < ApplicationRecord
   validates :phone_number, format: {with: VALID_PHONE_NUM_REGEX, message: "Invalid phone format only (+00) 000 000 00 00 or (+00) 000-000-00-00 formats are accepted"}
   validates :address, presence: true
   validates :email, format: {with: VALID_EMAIL_REGEX, message: "Invalid email format"}, presence: true, uniqueness: {case_sensitive: false, scope: :user_id}
-  before_save :set_card_issuer
+  validate :get_card_issuer
 
   enum table_fields: ["Name", "Birthday", "Phone number", "Address", "Card number", "Email"]
   enum card_issuer: ["American Express", "Diners Club", "Discover", "JCB", "MasterCard", "Visa", "Maestro", "Dankort", "Undefined"], _default: "Undefined"
@@ -56,16 +56,29 @@ class Contact < ApplicationRecord
     csv_file.no_contacts_available if !contact_saved && !contact_error_saved
   end
 
+
+	def self.generate_csv
+		CSV.generate(headers: true) do |csv|
+      attributes = self.attribute_names.grep_v(/.at|encrypted.|table|user/)
+			csv << attributes
+			all.each do |record|
+				csv << record.attributes.values_at(*attributes)
+			end
+		end
+	end
+
   private 
 
-  def set_card_issuer
+  def get_card_issuer
+    card_number = self.card_number
+    card_number.delete!(' ') if card_number.present?
     detector = CreditCardValidations::Detector.new(card_number)
     if detector.valid?
       self.card_issuer = detector.brand_name
       self.card_number = card_number[-4..-1]
       self.encrypted_card_number = BCrypt::Password.create(card_number)
     else
-      errors.add(:card_number, "Card number is invalid") if !detector.valid?
+      errors.add(:card_number, "Card number is invalid")
     end
   end
 

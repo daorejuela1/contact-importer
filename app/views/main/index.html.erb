@@ -5,3 +5,5 @@
 <%= pagy_bootstrap_nav(@pagy).html_safe %>
 <%= render 'contacts/contact_table', {contacts: @contacts, error_fields: nil}%>
 <%= pagy_bootstrap_nav(@pagy).html_safe %>
+
+<%= link_to('Export to CSV', root_path(format: :csv) , class: "m-3 d-block col-6 mx-auto btn btn-success") %>

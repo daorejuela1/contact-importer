@@ -7,7 +7,7 @@ class CsvUploadsController < ApplicationController
     @pagy, @csv_files = pagy(current_user.csv_uploads.all)
   end
   
-  def upload
+  def create
     csv_upload = current_user.csv_uploads.new(csv_params)
     if csv_upload.save
       redirect_to new_csv_mapper_path(id: csv_upload), notice: "File accepted"

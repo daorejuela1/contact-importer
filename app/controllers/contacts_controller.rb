@@ -12,9 +12,9 @@ class ContactsController < ApplicationController
   end
 
   def import
-    file = CsvUpload.find_by_id(params[:csv_file_id])
+    file = CsvUpload.find_by_id(params[:id])
     Contact.import_csv(file, @mapped_data, current_user)
-    redirect_to contacts_path, notice: "Contacts uploadedc:"
+    redirect_to contacts_path, notice: "Whole file has been imported"
   end
 
   private
