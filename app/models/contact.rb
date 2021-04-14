@@ -14,8 +14,6 @@ class Contact < ApplicationRecord
   validates :phone_number, format: {with: VALID_PHONE_NUM_REGEX, message: "Invalid phone format only (+00) 000 000 00 00 or (+00) 000-000-00-00 formats are accepted"}
   validates :address, presence: true
   validates :email, format: {with: VALID_EMAIL_REGEX, message: "Invalid email format"}, presence: true, uniqueness: {case_sensitive: false, scope: :user_id}
-  validates :card_number, presence: true, credit_card_number: true
-  attr_encrypted :card_number, key: "This is a key that is 256 bits!!"
   before_save :set_card_issuer
 
   enum table_fields: ["Name", "Birthday", "Phone number", "Address", "Card number", "Email"]
@@ -32,6 +30,7 @@ class Contact < ApplicationRecord
     CSV.open(File.open(file_path), "r+") do |file|
       headers = file.shift
       file.rewind
+      file << headers + ["Contact importer logs"]
       CSV.foreach(file_path, headers: true) do |row|
         contact_dict = Hash.new
         mapping_hash.each do |hash|
@@ -41,30 +40,33 @@ class Contact < ApplicationRecord
         if contact.save
           # Flag that at least one user was saved
           contact_saved = true
+          file << row.values_at + ["OK"]
         else
           contact_error_saved = true
           # Generate error with associated user
           contact_dict.delete("card_number")
           contact_dict[:reason] = contact.errors.full_messages
-          current_user.contact_errors.find_or_create_by!(contact_dict)
           file << row.values_at + [contact_dict[:reason].join("-").gsub(",", ".")]
+          current_user.contact_errors.find_or_create_by!(contact_dict)
         end
       end
     end
     csv_file.contact_imported if contact_saved
     csv_file.nothing_is_good if !contact_saved && contact_error_saved
     csv_file.no_contacts_available if !contact_saved && !contact_error_saved
-    TTY::File.prepend_to_file(file_path) do
-      headers.join(",") + "\n" if !contact_error_saved
-      headers.join(",") + ",Errors" + "\n" if contact_error_saved
-    end
   end
 
   private 
 
   def set_card_issuer
     detector = CreditCardValidations::Detector.new(card_number)
-    self.card_issuer = detector.brand_name
+    if detector.valid?
+      self.card_issuer = detector.brand_name
+      self.card_number = card_number[-4..-1]
+      self.encrypted_card_number = BCrypt::Password.create(card_number)
+    else
+      errors.add(:card_number, "Card number is invalid") if !detector.valid?
+    end
   end
 
   def birthday_date_is_valid
