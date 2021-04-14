@@ -1,6 +1,6 @@
 class CsvUploadsController < ApplicationController
   def new
-    @csv_upload = CsvUpload.new()
+    @csv_upload = current_user.csv_uploads.new()
   end
 
   def index
@@ -8,12 +8,17 @@ class CsvUploadsController < ApplicationController
   end
   
   def upload
-    @csv_upload = current_user.csv_uploads.new(csv_params)
-    if @csv_upload.save
-      render new_csv_mapper_path, notice: "File accepted"
+    csv_upload = current_user.csv_uploads.new(csv_params)
+    if csv_upload.save
+      redirect_to new_csv_mapper_path(id: csv_upload), notice: "File accepted"
     else
       render :new
     end
+  end
+
+  def destroy
+    @csv_upload = current_user.csv_uploads.find(params[:id])
+    redirect_to csv_uploads_path, notice: 'File deleted succesfully' if @csv_upload.destroy
   end
 
  private

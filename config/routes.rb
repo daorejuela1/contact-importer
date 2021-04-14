@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   resources :contacts, only: [:new, :create, :index] do
     collection { post :import }
   end
-  resources :csv_uploads, only: [:new, :create, :index] do
+  resources :csv_uploads, only: [:new, :create, :index, :destroy] do
     collection {post :upload}
   end
   resources :csv_mapper, only: :new

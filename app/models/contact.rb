@@ -22,22 +22,41 @@ class Contact < ApplicationRecord
   enum card_issuer: ["American Express", "Diners Club", "Discover", "JCB", "MasterCard", "Visa", "Maestro", "Dankort", "Undefined"], _default: "Undefined"
 
   def self.import_csv(csv_file, mapping_hash, current_user)
-    csv_file.csv_file.open do |file|
-      CSV.foreach(file.path, headers: true) do |row|
+    csv_file.start_processing #Change state of the file
+    contact_saved = false
+    contact_error_saved = false
+
+    csv_file_name = csv_file.csv_file.filename.to_s
+    file_path = ActiveStorage::Blob.service.send(:path_for, csv_file.csv_file.key)
+    headers = nil
+    CSV.open(File.open(file_path), "r+") do |file|
+      headers = file.shift
+      file.rewind
+      CSV.foreach(file_path, headers: true) do |row|
         contact_dict = Hash.new
         mapping_hash.each do |hash|
           contact_dict[table_fields.key(hash[1].to_i).parameterize.underscore] = row.values_at[hash[0].split("-")[1].to_i]
         end
         contact = current_user.contacts.find_or_initialize_by(contact_dict)
         if contact.save
-          p "Saved!!"
+          # Flag that at least one user was saved
+          contact_saved = true
         else
+          contact_error_saved = true
           # Generate error with associated user
           contact_dict.delete("card_number")
           contact_dict[:reason] = contact.errors.full_messages
           current_user.contact_errors.find_or_create_by!(contact_dict)
+          file << row.values_at + [contact_dict[:reason].join("-").gsub(",", ".")]
         end
       end
+    end
+    csv_file.contact_imported if contact_saved
+    csv_file.nothing_is_good if !contact_saved && contact_error_saved
+    csv_file.no_contacts_available if !contact_saved && !contact_error_saved
+    TTY::File.prepend_to_file(file_path) do
+      headers.join(",") + "\n" if !contact_error_saved
+      headers.join(",") + ",Errors" + "\n" if contact_error_saved
     end
   end
 

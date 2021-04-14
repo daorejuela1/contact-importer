@@ -34,7 +34,10 @@ gem 'devise-bootstrap-views', '~> 1.0'
 gem 'bootsnap', '>= 1.4.4', require: false
 # Gem for credit card testing and validation
 gem 'credit_card_validations'
-
+# Gem for state handling
+gem 'rails_state_machine'
+# File managing
+gem "tty-file"
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
