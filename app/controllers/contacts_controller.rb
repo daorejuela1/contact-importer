@@ -14,7 +14,7 @@ class ContactsController < ApplicationController
   def import
     file = CsvUpload.find_by_id(params[:id])
     ContactWorkerJob.perform_async(params[:id], @mapped_data, current_user.id)
-    redirect_to contacts_path, notice: "Whole file has been imported"
+    redirect_to contacts_path, notice: "File has ben added to queue"
   end
 
   private
