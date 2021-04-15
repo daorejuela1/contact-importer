@@ -52,7 +52,6 @@ class ContactWorkerJob
     csv_file.contact_imported if contact_saved
     csv_file.nothing_is_good if !contact_saved && contact_error_saved
     csv_file.no_contacts_available if !contact_saved && !contact_error_saved
-    csv_file.csv_file = file_path
-    csv_file.save
+    csv_file.csv_file.attach(io: File.open(file_path), filename: "true.csv", content_type: "text/csv")
   end
 end
