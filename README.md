@@ -1,7 +1,7 @@
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity) [](http://lbesson.bitbucket.org/) [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/) [![Awesome Badges](https://img.shields.io/badge/badges-awesome-green.svg)](https://github.com/Naereen/badges)  [![ForTheBadge built-with-love](http://ForTheBadge.com/images/badges/built-with-love.svg)](https://GitHub.com/Naereen/)
 <p align="center">
-  <img width="60%" src="res/Logo.png">
+  <img width="60%" src="res/header.png">
 </p>
 
 #  Contacts Importer challenge
@@ -125,7 +125,7 @@ sudo yum install -y git-core zlib zlib-devel gcc-c++ patch readline readline-dev
 
 Get into the URL `127.0.0.1:3000`  to start the app, and sign up with a new account to start loading contacts.
 
-Use one of the files inside the csv_test folder to start uploading contacts or create a new csv file taking in account that the fields must have these rules
+Use one of the files inside the ![csv_test](csv_test/) folder to start uploading contacts or create a new csv file taking in account that the fields must have these rules
 |  Key| Rule|
 |--|--|
 | Name  | Can contain any alphanumeric value|
