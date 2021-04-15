@@ -15,7 +15,7 @@ class ContactWorkerJob
     contact_error_saved = false
 
     csv_file_name = csv_file.csv_file.filename.to_s
-    file_path = ActiveStorage::Blob.service.send(:path_for, csv_file.csv_file.key)
+    file_path = ActiveStorage::Blob.service.path_for(csv_file.csv_file.key)
     headers = nil
     CSV.open(File.open(file_path), "r+") do |file|
       headers = file.shift
