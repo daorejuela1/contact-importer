@@ -19,7 +19,8 @@ class ContactWorkerJob
     #file_path = ActiveStorage::Downloader.download_blob_to_tempfile(csv_file.csv_file.key)
     #file = ActiveStorage::Downloader.new(csv_file.csv_file).download_blob_to_tempfile.path
     #file_path = ActiveStorage::Service.open(csv_file.csv_file.key)
-    file_path = "/tmp/file.csv"
+    require 'open-uri'
+    file_path = "/tmp/#{csv_file_id}.csv"
     file_uri = csv_file.csv_file.service_url
     download = open(file_uri)
     IO.copy_stream(download, file_path)
