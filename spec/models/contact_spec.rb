@@ -38,6 +38,11 @@ RSpec.describe Contact, type: :model do
       expect(contact).to be_valid
     end
 
+    it 'has a name with spaces the other valid special character' do
+      contact.name = "da orejuela1"
+      expect(contact).to be_valid
+    end
+
     it 'has no birthday' do
       contact.birthday = nil
       expect(contact).not_to be_valid
@@ -60,7 +65,7 @@ RSpec.describe Contact, type: :model do
 
     it 'has the first (%Y%m%d) format birthday without leading zero' do
       contact.birthday = "2019124"
-      expect(contact).to be_valid
+      expect(contact).not_to be_valid
     end
 
     it 'has the second (%F) format birthday' do
@@ -70,7 +75,7 @@ RSpec.describe Contact, type: :model do
 
     it 'has the second (%F) format birthday without leading zero' do
       contact.birthday = "2019-12-4"
-      expect(contact).to be_valid
+      expect(contact).not_to be_valid
     end
 
     it 'has as birthday a day greater than today' do
@@ -166,37 +171,37 @@ RSpec.describe Contact, type: :model do
     it 'card_issuer is American Express' do
       contact.card_number = "371449635398431"
       contact.save
-      expect(contact.card_issuer).to be(0)
+      expect(contact.card_issuer).to eq("American Express")
     end
 
     it 'card_issuer is Diners Club' do
       contact.card_number = "30569309025904"
       contact.save
-      expect(contact.card_issuer).to be(1)
+      expect(contact.card_issuer).to eq("Diners Club")
     end
 
     it 'card_issuer is Discover' do
       contact.card_number = "6011111111111117"
       contact.save
-      expect(contact.card_issuer).to be(2)
+      expect(contact.card_issuer).to eq("Discover")
     end
 
     it 'card_issuer is JCB' do
       contact.card_number = "3530111333300000"
       contact.save
-      expect(contact.card_issuer).to be(3)
+      expect(contact.card_issuer).to eq("JCB")
     end
 
     it 'card_issuer is Mastercard' do
       contact.card_number = "5555555555554444"
       contact.save
-      expect(contact.card_issuer).to be(4)
+      expect(contact.card_issuer).to eq("MasterCard")
     end
 
     it 'card_issuer is VISA' do
       contact.card_number = "4111111111111111"
       contact.save
-      expect(contact.card_issuer).to be(5)
+      expect(contact.card_issuer).to eq("Visa")
     end
 
     it 'email does not exist' do
@@ -220,15 +225,25 @@ RSpec.describe Contact, type: :model do
     end
 
     it 'duplicated data but different email' do
-      contact2 = FactoryBot.create(:contact, email: "1475@holbertonschool.com")
-      expect(contact).to be_valid
+      duplicated_contact = FactoryBot.build(:contact, email: "1475@holbertonschool.com")
+      contact.save
+      duplicated_contact.user_id = contact.user_id
+      expect(duplicated_contact).to be_valid
     end
 
-    it 'duplicated data same email' do
-      contact2 = FactoryBot.create(:contact, email: "1475@holbertonschool.com")
-      expect(contact).not_to be_valid
+    it 'duplicated data same email same user' do
+      duplicated_contact = FactoryBot.build(:contact)
+      contact.save
+      duplicated_contact.user_id = contact.user_id
+      expect(duplicated_contact).not_to be_valid
     end
 
+    it 'duplicated data same email other  user' do
+      duplicated_contact = FactoryBot.build(:contact)
+      contact.save
+      duplicated_contact.user_id = FactoryBot.create(:user, email: "test1@hotmail.es")
+      expect(duplicated_contact).to be_valid
+    end
   end
 
 end

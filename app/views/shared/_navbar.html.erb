@@ -1,7 +1,7 @@
-<nav class="navbar navbar-expand-lg border-bottom">
+<nav class="navbar navbar-expand-lg border-bottom ">
   <div class="container">
     <%= link_to root_path, class: "nav_logo" do %>
-      <%= image_tag("Logo.png", width: 60) %>
+      <%= image_tag("Logo.png", width: 70) %>
       <h1 class="navbar-brand display-4 font-weight-bold text-dark">Contact Importer</h1>
     <% end %>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
@@ -12,17 +12,17 @@
         <% if user_signed_in? %>
           <li>
             <p class="navbar-brand">
-              Hi, <%= link_to("@"+current_user.email, edit_user_registration_path)%>
+            Hi, <%= link_to("@"+current_user.email, edit_user_registration_path)%>
             </p>
           </li>
           <li>
             <p>
-            <%= link_to('My imported contacts', edit_user_registration_path, class: "navbar-brand btn btn-outline-primary") %>
+            <%= link_to('My imported contacts', contacts_path, class: "navbar-brand btn btn-outline-primary") %>
             </p>
           </li>
           <li>
             <p>
-            <%= link_to('My imported files', edit_user_registration_path, class: "navbar-brand btn btn-outline-success") %>
+            <%= link_to('My imported files', csv_uploads_path, class: "navbar-brand btn btn-outline-success") %>
             </p>
           </li>
           <li>

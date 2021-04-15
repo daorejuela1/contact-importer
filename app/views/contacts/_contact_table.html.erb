@@ -2,19 +2,19 @@
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Name</th>
-      <th scope="col">Birthday</th>
-      <th scope="col">Phone Number</th>
-      <th scope="col">Address</th>
-      <th scope="col">Credit Card</th>
-      <th scope="col">Issuer</th>
-      <th scope="col">Email</th>
-      <th scope="col">Imported by</th>
+      <th scope="col" class="text-center">Name</th>
+      <th scope="col" class="text-center">Birthday</th>
+      <th scope="col" class="text-center">Phone Number</th>
+      <th scope="col" class="text-center">Address</th>
+      <th scope="col" class="text-center">Credit Card</th>
+      <th scope="col" class="text-center"><%= "Issuer" if error_fields.nil? %></th>
+      <th scope="col" class="text-center">Email</th>
+      <th scope="col" class="text-center"><%= "Error reason" if error_fields.present?%></th>
     </tr>
   </thead>
   <tbody>
     <% contacts.each_with_index do |contact, index| %>
-      <%= render partial: "contacts/contact_template", locals: {contact: contact, index: index} %>
+      <%= render partial: "contacts/contact_template", locals: {contact: contact, index: index, error_fields: error_fields} %>
     <% end %>
   </tbody>
 </table>

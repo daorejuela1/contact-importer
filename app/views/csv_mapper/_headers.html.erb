@@ -1,0 +1,15 @@
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <% headers.each do |head_line| %>
+        <th scope="col"><%= head_line %></th>
+      <% end %>
+    </tr>
+    <tr>
+      <% headers.each_with_index do |head_line, i| %>
+        <th scope="col">
+          <%= form.select "col-#{i}", Contact.table_fields, { include_blank: true , selected: i }%>
+        </th>
+      <% end %>
+    </tr>
+  </thead>

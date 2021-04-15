@@ -7,4 +7,19 @@ module ContactsHelper
   def show_credit_card(card)
     "* #{card[-4..-1]}"
   end
+
+  def error_listing(error)
+    error_list = eval(error)
+    code = "<ul>"
+    concat code.html_safe
+    error_list.each do |data|
+      code = "<li>"
+      concat code.html_safe
+      concat data
+      code = "</li>"
+      concat code.html_safe
+    end
+    code = "</ul>"
+    concat code.html_safe
+  end
 end

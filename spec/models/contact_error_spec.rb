@@ -5,12 +5,12 @@ RSpec.describe ContactError, type: :model do
     let(:contact_error) {FactoryBot.build(:contact_error)}
 
   it 'has no error message' do
-    contact_error.errors = nil
+    contact_error.reason = nil
     expect(contact_error).not_to be_valid
   end
 
   it 'has an empty error message' do
-    contact_error.errors = ""
+    contact_error.reason = ""
     expect(contact_error).not_to be_valid
   end
 
