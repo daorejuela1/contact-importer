@@ -1,5 +1,20 @@
 # frozen_string_literal: true
 
+class TurboFailureApp < Devise::FailureApp
+  def respond
+    if request_format == :turbo_stream
+      recall
+      # turbo wants a 422 https://turbo.hotwire.dev/handbook/drive#redirecting-after-a-form-submission
+      response[0] = 422
+    else
+      super
+    end
+  end
+
+  def skip_format?
+    %w[html turbo_stream */*].include? request_format.to_s
+  end
+end
 # Assuming you have not yet modified this file, each configuration option below
 # is set to its default value. Note that some are commented out while others
 # are not: uncommented lines are intended to protect your configuration from
