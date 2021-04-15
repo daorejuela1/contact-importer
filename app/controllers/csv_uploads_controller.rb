@@ -1,10 +1,12 @@
 class CsvUploadsController < ApplicationController
+  before_action :authenticate_user!
+
   def new
     @csv_upload = current_user.csv_uploads.new()
   end
 
   def index
-    @pagy, @csv_files = pagy(current_user.csv_uploads.all)
+    @pagy, @csv_uploads = pagy(current_user.csv_uploads.all)
   end
   
   def create

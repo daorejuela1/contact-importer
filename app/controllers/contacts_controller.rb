@@ -13,7 +13,7 @@ class ContactsController < ApplicationController
 
   def import
     file = CsvUpload.find_by_id(params[:id])
-    Contact.import_csv(file, @mapped_data, current_user)
+    ContactWorkerJob.perform_async(params[:id], @mapped_data, current_user.id)
     redirect_to contacts_path, notice: "Whole file has been imported"
   end
 

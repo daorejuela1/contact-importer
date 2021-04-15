@@ -1,0 +1,14 @@
+<%= turbo_frame_tag dom_id(csv_upload) do %>
+  <div class="col">
+    <div class="card m-3 border-<%= CsvUpload.state_colors(csv_upload.state)%> " style="width: 18rem; height: 400px;">
+      <div class="card-header bg-transparent border-<%= CsvUpload.state_colors(csv_upload.state) %>">Filename: <%= truncate(csv_upload.csv_file.filename.to_s, length: 23) %></div>
+      <div class="card-body text-<%= CsvUpload.state_colors(csv_upload.state) %> ">
+        <h5 class="card-title">State: <%= csv_upload.state %></h5>
+        <p class="card-text">Download: <%= link_to csv_upload.csv_file.filename, rails_blob_path(csv_upload.csv_file, disposition: 'attachment') %></p>
+        <p class="card-text"> <%= link_to "Process "+csv_upload.csv_file.filename.to_s, new_csv_mapper_path(id: csv_upload.id), class: "btn btn-primary" if csv_upload.state == "waiting" %></p>
+        <p class="card-text"> <%= link_to "Delete", csv_upload_path(id: csv_upload.id), class: "btn btn-danger", method: :delete, data: { confirm: "Are you sure?"  } %></p>
+      </div>
+      <div class="card-footer bg-transparent border-<%= CsvUpload.state_colors(csv_upload.state) %>">Uploaded: <%= time_ago_in_words(csv_upload.created_at) %> ago </div>
+    </div>
+  </div>
+<% end %>

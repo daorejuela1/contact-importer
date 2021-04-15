@@ -38,6 +38,11 @@ RSpec.describe Contact, type: :model do
       expect(contact).to be_valid
     end
 
+    it 'has a name with spaces the other valid special character' do
+      contact.name = "da orejuela1"
+      expect(contact).to be_valid
+    end
+
     it 'has no birthday' do
       contact.birthday = nil
       expect(contact).not_to be_valid
