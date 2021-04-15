@@ -15,15 +15,18 @@ class ContactWorkerJob
     contact_error_saved = false
 
     csv_file_name = csv_file.csv_file.filename.to_s
-    #file_path = ActiveStorage::Blob.service.path_for(csv_file.csv_file.key)
     #file_path = ActiveStorage::Downloader.download_blob_to_tempfile(csv_file.csv_file.key)
     #file = ActiveStorage::Downloader.new(csv_file.csv_file).download_blob_to_tempfile.path
     #file_path = ActiveStorage::Service.open(csv_file.csv_file.key)
-    require 'open-uri'
-    file_path = "/tmp/#{csv_file_id}.csv"
-    file_uri = csv_file.csv_file.service_url
-    download = open(file_uri)
-    IO.copy_stream(download, file_path)
+    if Rails.env.development?
+      file_path = ActiveStorage::Blob.service.path_for(csv_file.csv_file.key)
+    else
+      require 'open-uri' #download for AWS
+      file_path = "/tmp/#{csv_file_id}.csv"
+      file_uri = csv_file.csv_file.service_url
+      download = open(file_uri)
+      IO.copy_stream(download, file_path)
+    end
     headers = nil
     CSV.open(File.open(file_path), "r+") do |file|
       headers = file.shift
@@ -52,6 +55,6 @@ class ContactWorkerJob
     csv_file.contact_imported if contact_saved
     csv_file.nothing_is_good if !contact_saved && contact_error_saved
     csv_file.no_contacts_available if !contact_saved && !contact_error_saved
-    csv_file.csv_file.attach(io: File.open(file_path), filename: "true.csv", content_type: "text/csv")
+    csv_file.csv_file.attach(io: File.open(file_path), filename: csv_file_name, content_type: "text/csv") if Rails.env.production? #Re upload file
   end
 end
