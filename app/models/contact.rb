@@ -51,8 +51,14 @@ class Contact < ApplicationRecord
   end
 
   def birthday_date_is_valid
-    if birthday.present? && birthday.match(VALID_BIRTHDAY_REGEX) && Date.parse(birthday).after?(Date.today)
-      errors.add(:birthday, "We don't accept time travelers")
+    if birthday.present?
+      begin
+        if Date.parse(birthday).after?(Date.today)
+          errors.add(:birthday, "We don't accept time travelers")
+        end
+      rescue
+          errors.add(:birthday, "Wrong date format")
+      end
     end
   end
 end
