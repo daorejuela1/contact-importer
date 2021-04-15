@@ -21,15 +21,15 @@ class Contact < ApplicationRecord
   enum table_fields: ["Name", "Birthday", "Phone number", "Address", "Card number", "Email"]
   enum card_issuer: ["American Express", "Diners Club", "Discover", "JCB", "MasterCard", "Visa", "Maestro", "Dankort", "Undefined"], _default: "Undefined"
 
-	def self.generate_csv
-		CSV.generate(headers: true) do |csv|
+  def self.generate_csv
+    CSV.generate(headers: true) do |csv|
       attributes = self.attribute_names.grep_v(/.at|encrypted.|table|user/)
-			csv << attributes
-			all.each do |record|
-				csv << record.attributes.values_at(*attributes)
-			end
-		end
-	end
+      csv << attributes
+      all.each do |record|
+        csv << record.attributes.values_at(*attributes)
+      end
+    end
+  end
 
   private 
 
@@ -38,9 +38,13 @@ class Contact < ApplicationRecord
     card_number.delete!(' ') if card_number.present?
     detector = CreditCardValidations::Detector.new(card_number)
     if detector.valid?
-      self.card_issuer = detector.brand_name
-      self.card_number = card_number[-4..-1]
-      self.encrypted_card_number = BCrypt::Password.create(card_number)
+      if detector.brand_name.match(/China.|Elo|Hipercard|MIR|Rupay|Solo|Switch/)
+        errors.add(:card_issuer, "This Issuer hasnt been approved")
+      else
+        self.card_issuer = detector.brand_name
+        self.card_number = card_number[-4..-1]
+        self.encrypted_card_number = BCrypt::Password.create(card_number)
+      end
     else
       errors.add(:card_number, "Card number is invalid")
     end

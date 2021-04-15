@@ -96,6 +96,9 @@ GEM
       warden (~> 1.2.3)
     devise-bootstrap-views (1.1.0)
     diff-lcs (1.4.4)
+    enum_attributes_validation (0.1.7)
+      activerecord
+      activesupport
     erubi (1.10.0)
     factory_bot (6.1.0)
       activesupport (>= 5.0.0)
@@ -131,8 +134,6 @@ GEM
     nio4r (2.5.7)
     nokogiri (1.11.3)
       mini_portile2 (~> 2.5.0)
-      racc (~> 1.4)
-    nokogiri (1.11.3-x86_64-linux)
       racc (~> 1.4)
     orm_adapter (0.5.0)
     pagy (3.12.0)
@@ -253,7 +254,6 @@ GEM
 
 PLATFORMS
   ruby
-  x86_64-linux
 
 DEPENDENCIES
   aws-sdk-s3
@@ -262,6 +262,7 @@ DEPENDENCIES
   credit_card_validations
   devise
   devise-bootstrap-views (~> 1.0)
+  enum_attributes_validation
   factory_bot_rails
   hotwire-rails
   jbuilder (~> 2.7)
@@ -285,4 +286,4 @@ RUBY VERSION
    ruby 2.7.1p83
 
 BUNDLED WITH
-   2.2.9
+   2.1.4
