@@ -112,8 +112,8 @@ Please make sure that you have installed the essentials and rails 6+ before clon
 sudo yum install -y git-core zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison curl sqlite-devel redis-server
 ```
 
-1. Clone the repository: `git clone https://github.com/daorejuela1/twitter_clone`
-2. Go to the folder: `cd twitter_clone`
+1. Clone the repository: `git clone https://github.com/daorejuela1/contact-importer`
+2. Go to the folder: `cd contact-importer`
 3. Install requirements `bundle`
 4. Create the data base `rails db:create`
 5. Run the migrations `rails db:migrate`
