@@ -9,7 +9,7 @@ import "channels"
 
 import "jquery"
 import "bootstrap"
-//import "@hotwired/turbo-rails"
+import "@hotwired/turbo-rails"
 
 Rails.start()
 ActiveStorage.start()

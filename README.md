@@ -179,7 +179,7 @@ Here are some awesome projects I have been working on:
 | ![Monty project](https://user-images.githubusercontent.com/55990484/93660905-3fd0db00-fa19-11ea-97db-fb3c0169cb4c.gif) | ![Tweet daily](/res/tweet_daily.png) | ![Monty](/res/Monty.jpg) | ![Serpent](/res/serpent.png) | ![Shell](res/redirections.gif) |
 ## ToDo
 
- - [ ] Fix bug to implement Devise with Hotwire
+ - [x] Fix bug to implement Devise with Hotwire
 
 ## Credits ✈
 

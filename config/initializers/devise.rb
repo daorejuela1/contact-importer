@@ -3,17 +3,34 @@
 class TurboFailureApp < Devise::FailureApp
   def respond
     if request_format == :turbo_stream
-      recall
-      # turbo wants a 422 https://turbo.hotwire.dev/handbook/drive#redirecting-after-a-form-submission
-      response[0] = 422
+      redirect
     else
       super
     end
   end
 
   def skip_format?
-    %w[html turbo_stream */*].include? request_format.to_s
+    %w(html turbo_stream */*).include? request_format.to_s
   end
+end
+
+class TurboController < ApplicationController
+  class Responder < ActionController::Responder
+    def to_turbo_stream
+      controller.render(options.merge(formats: :html))
+    rescue ActionView::MissingTemplate => error
+      if get?
+        raise error
+      elsif has_errors? && default_action
+        render rendering_options.merge(formats: :html, status: :unprocessable_entity)
+      else
+        redirect_to navigation_location
+      end
+    end
+  end
+
+  self.responder = Responder
+  respond_to :html, :turbo_stream
 end
 # Assuming you have not yet modified this file, each configuration option below
 # is set to its default value. Note that some are commented out while others
@@ -29,7 +46,7 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = 'de941847326aea22d7f910c08214c4c7e86cf2e6d475fb65f0230c2788ae0f1a0c0cdafdc8f308f72214bbc9ffe0e4fd081cf84571cb3c6ed2030a232d6b5185'
+  # config.secret_key = 'e3cebddf71301e1118293187146da95e5610ef8921ebb48eb577f9dd58ccad54f226ad37c641ad7d2b4ac0d754c762e97c273719a69be223bd20fd8cc9d4a304'
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -141,7 +158,7 @@ Devise.setup do |config|
   config.stretches = Rails.env.test? ? 1 : 12
 
   # Set up a pepper to generate the hashed password.
-  # config.pepper = '6c250e1c8edc1b2231c589ac9fad131f25d69a74d9079e15ed7312a0b134a8b66f571c59b134148073f970d6816450e02638da1165f5f91bab45a7a48b2d46bd'
+  # config.pepper = '2a49dc521eb8bf7bd9afa9ea24506fd3c2ece6125f419a485ab7ce1932d85110886ff0b7bf00fff8f398ce2f5ad7e3df448f24260aff9735ecf44638152cca81'
 
   # Send a notification to the original email when the user's email is changed.
   # config.send_email_changed_notification = false
@@ -186,7 +203,7 @@ Devise.setup do |config|
 
   # If true, extends the user's remember period when remembered via cookie.
   # config.extend_remember_period = false
-
+  config.parent_controller = 'TurboController'
   # Options to be passed to the created cookie. For instance, you can set
   # secure: true in order to force SSL only cookies.
   # config.rememberable_options = {}
@@ -278,7 +295,7 @@ Devise.setup do |config|
   # should add them to the navigational formats lists.
   #
   # The "*/*" below is required to match Internet Explorer requests.
-  # config.navigational_formats = ['*/*', :html]
+  config.navigational_formats = ['*/*', :html, :turbo_stream]
 
   # The default HTTP method used to sign out a resource. Default is :delete.
   config.sign_out_via = :delete
@@ -323,4 +340,8 @@ Devise.setup do |config|
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
+  #
+  config.warden do |manager|
+    manager.failure_app = TurboFailureApp
+  end
 end
