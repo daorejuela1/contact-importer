@@ -53,6 +53,10 @@ class CsvUpload < ApplicationRecord
   private
 
   def correct_csv_mime_type
+    # correct_csv_mime_type.
+    #
+    # checks csv_mime_type when being uploaded using a form
+    #
     if csv_file.attached? && !csv_file.content_type.in?(%w(text/csv))
       errors.add(:csv_file, 'Only accept CSV files for the moment')
     end

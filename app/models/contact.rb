@@ -22,6 +22,11 @@ class Contact < ApplicationRecord
   enum card_issuer: ["American Express", "Diners Club", "Discover", "JCB", "MasterCard", "Visa", "Maestro", "Dankort", "Undefined"], _default: "Undefined"
 
   def self.generate_csv
+    # Foo.
+    #
+    # @generates a csv file from the table attributes
+    #
+    # @return csv data
     CSV.generate(headers: true) do |csv|
       attributes = self.attribute_names.grep_v(/.at|encrypted.|table|user/)
       csv << attributes
@@ -31,9 +36,14 @@ class Contact < ApplicationRecord
     end
   end
 
-  private 
+  private
 
   def get_card_issuer
+    # get_card_issuer.
+    #
+    # @gets the credit card issuer from the card number
+    #
+    # @return [String] if card issuer is found else it detects and exception
     card_number = self.card_number
     card_number.delete!(' ') if card_number.present?
     detector = CreditCardValidations::Detector.new(card_number)
@@ -51,13 +61,19 @@ class Contact < ApplicationRecord
   end
 
   def birthday_date_is_valid
+    # birthday_date_is_valid.
+    #
+    #   detects if the birthday of an user has a valid format & is not 
+    #   from the past
+    #
+    # @return [true] if birthday is valid
     if birthday.present?
       begin
         if Date.parse(birthday).after?(Date.today)
           errors.add(:birthday, "We don't accept time travelers")
         end
       rescue
-          errors.add(:birthday, "Wrong date format")
+        errors.add(:birthday, "Wrong date format")
       end
     end
   end
